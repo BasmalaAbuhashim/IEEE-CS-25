@@ -1,0 +1,29 @@
+#include<bits/stdc++.h>
+ 
+using namespace std;
+int main(){
+    string n,s,input;
+    
+    cin>>n>>input;
+    s = "qwertyuiopasdfghjkl;zxcvbnm,./";
+    unordered_map<char,char> left , right;
+    for(int i = 0;i<s.size();i++){
+        if(i>0){
+            left[s[i]] = s[i - 1];
+        }
+        else
+        left[s[i]] = s[s.size() - 1];
+        if(i < s.size() - 1){
+            right[s[i]] = s[i + 1];
+        }
+        else
+        right[s[i]] = s[0];
+    }
+    for(char chr : input){
+        if(n == "R"){
+            cout<<left[chr];
+        }
+        else
+        cout<<right[chr];
+    }
+}
