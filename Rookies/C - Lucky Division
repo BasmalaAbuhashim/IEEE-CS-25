@@ -1,0 +1,29 @@
+#include <bits/stdc++.h>
+using namespace std;
+bool is_luck(int luck){
+    while(luck>0){
+        int val = luck%10;
+        if(val != 4 && val !=7)
+        return false;
+        luck/=10;
+    }
+    return true;
+}
+int main()
+{
+    int num;
+    cin>>num;
+    vector <int>v;
+    for(int i =1;i<=1000;i++){
+        if(is_luck(i)){
+            v.push_back(i);
+        }
+    }
+    for(int luck_num : v){
+        if(num % luck_num == 0){
+            cout<<"YES";
+            return 0;
+        }
+    }
+    cout<<"NO";
+}
