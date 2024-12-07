@@ -1,0 +1,22 @@
+#include <bits/stdc++.h>
+
+using namespace std;
+
+int main()
+{
+    int n;
+    cin>>n;//6
+    int arr[n];
+    for(int i= 0;i<n;i++){
+        cin>>arr[i]; //1 10 17 12 15 2
+    }
+    sort(arr,arr+n);//1 2 10 12 15 17
+    int j = 0,res = 1;
+    for(int i= 0;i<n;i++){//0..1..2
+        while(j<n&& abs(arr[j] - arr[i]) <=5){
+            j++; // 1..2..3..4..5
+            res=max(res,j-i);//1.2..2..2..3
+        }
+    }
+    cout<<res;
+}
