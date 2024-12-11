@@ -1,0 +1,108 @@
+#include <iostream>
+#include <vector>
+#include <queue>
+#include <string>
+#include <algorithm>
+using namespace std;
+
+struct Cell {
+    int x, y, time;
+};
+
+bool isValid(int x, int y, int n, int m, vector<vector<char>> &labyrinth, vector<vector<int>> &danger, int curTime) {
+    return x >= 0 && x < n && y >= 0 && y < m && labyrinth[x][y] != '#' && (danger[x][y] == -1 || curTime < danger[x][y]);
+}
+
+int main() {
+    int n, m;
+    cin >> n >> m;
+
+    vector<vector<char>> labyrinth(n, vector<char>(m));
+    vector<vector<int>> danger(n, vector<int>(m, -1)); 
+    vector<vector<bool>> visited(n, vector<bool>(m, false));
+    vector<vector<pair<int, int>>> parent(n, vector<pair<int, int>>(m, {-1, -1}));
+
+    queue<Cell> monsterQueue, playerQueue;
+    pair<int, int> start;
+
+    for (int i = 0; i < n; i++) {
+        for (int j = 0; j < m; j++) {
+            cin >> labyrinth[i][j];
+            if (labyrinth[i][j] == 'M') {
+                monsterQueue.push({i, j, 0});
+                danger[i][j] = 0;
+            } else if (labyrinth[i][j] == 'A') {
+                start = {i, j};
+            }
+        }
+    }
+
+    // Precompute monster influence using BFS
+    int dx[] = {-1, 1, 0, 0};
+    int dy[] = {0, 0, -1, 1};
+    while (!monsterQueue.empty()) {
+        Cell current = monsterQueue.front();
+        monsterQueue.pop();
+
+        for (int i = 0; i < 4; i++) {
+            int nx = current.x + dx[i];
+            int ny = current.y + dy[i];
+
+            if (nx >= 0 && nx < n && ny >= 0 && ny < m && labyrinth[nx][ny] == '.' && danger[nx][ny] == -1) {
+                danger[nx][ny] = current.time + 1;
+                monsterQueue.push({nx, ny, current.time + 1});
+            }
+        }
+    }
+
+    playerQueue.push({start.first, start.second, 0});
+    visited[start.first][start.second] = true;
+    bool escaped = false;
+    pair<int, int> exitCell;
+    string path;
+
+    while (!playerQueue.empty()) {
+        Cell current = playerQueue.front();
+        playerQueue.pop();
+
+        if (current.x == 0 || current.x == n - 1 || current.y == 0 || current.y == m - 1) {
+            escaped = true;
+            exitCell = {current.x, current.y};
+            break;
+        }
+
+        for (int i = 0; i < 4; i++) {
+            int nx = current.x + dx[i];
+            int ny = current.y + dy[i];
+
+            if (isValid(nx, ny, n, m, labyrinth, danger, current.time + 1) && !visited[nx][ny]) {
+                visited[nx][ny] = true;
+                playerQueue.push({nx, ny, current.time + 1});
+                parent[nx][ny] = {current.x, current.y};
+            }
+        }
+    }
+
+    if (!escaped) {
+        cout << "NO" << endl;
+        return 0;
+    }
+
+    pair<int, int> cur = exitCell;
+    while (cur != start) {
+        pair<int, int> par = parent[cur.first][cur.second];
+        if (par.first + 1 == cur.first) path += 'D';
+        else if (par.first - 1 == cur.first) path += 'U';
+        else if (par.second + 1 == cur.second) path += 'R';
+        else if (par.second - 1 == cur.second) path += 'L';
+        cur = par;
+    }
+
+    reverse(path.begin(), path.end());
+
+    cout << "YES" << endl;
+    cout << path.length() << endl;
+    cout << path << endl;
+
+    return 0;
+}
