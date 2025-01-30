@@ -1,0 +1,52 @@
+#include <bits/stdc++.h>
+#include <math.h>
+
+using namespace std;
+typedef long long ll;
+typedef unsigned long long ull;
+
+int calc(int i, int j, int &n, int &m, vector<vector<int>> &arr) {
+  if (i < 0 || i >= n || j < 0 || j >= m)
+    return 0;
+  if (arr[i][j] == 0)
+    return 0;
+
+  int total = arr[i][j];
+  arr[i][j] = 0;
+  total += calc(i + 1, j, n, m, arr) + calc(i - 1, j, n, m, arr) +
+           calc(i, j - 1, n, m, arr) + calc(i, j + 1, n, m, arr);
+
+  return total;
+}
+
+void solve() {
+  int n, m;
+  cin >> n >> m;
+  vector<vector<int>> arr(n, vector<int>(m));
+  for (int i = 0; i < n; i++) {
+    for (int j = 0; j < m; j++) {
+      cin >> arr[i][j];
+    }
+  }
+
+  int mx = 0;
+  for (int i = 0; i < n; i++) {
+    for (int j = 0; j < m; j++) {
+      if (arr[i][j] != 0) {
+        mx = max(mx, calc(i, j, n, m, arr)); 
+      }
+    }
+  }
+  cout << mx << "\n";
+  return;
+}
+
+int main() {
+  int t;
+  cin >> t;
+
+  for (int i = 1; i <= t; i++) {
+    solve();
+  }
+  return 0;
+}
