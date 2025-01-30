@@ -1,0 +1,36 @@
+#include <iostream>
+#include <vector>
+
+using namespace std;
+
+vector<vector<pair<int, int>>> adj;
+int mx = 0;
+
+void dfs(int node, int cell, int currentCost) {
+    mx = max(mx, currentCost);
+    for (auto edge : adj[node]) {
+        int neighbor = edge.first;
+        int cost = edge.second;
+        if (neighbor != cell) {
+            dfs(neighbor, node, currentCost + cost);
+        }
+    }
+}
+
+int main() {
+    int n;
+    cin >> n;
+    adj.resize(n);
+    
+    for (int i = 0; i < n - 1; i++) {
+        int u, v, c;
+        cin >> u >> v >> c;
+        adj[u].push_back({v, c});
+        adj[v].push_back({u, c});
+    }
+
+    dfs(0, -1, 0);
+    
+    cout << mx << endl;
+    return 0;
+}
