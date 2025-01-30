@@ -1,0 +1,58 @@
+#include <bits/stdc++.h>
+
+using namespace std;
+
+const int MAXX = 1e5 + 7;
+vector<int> adj[MAXX];
+int wth_cats[MAXX];
+bool visited[MAXX];
+int n,m,valid = 0;
+
+bool is_leaf(int node){
+    for(int neighbor : adj[node]){
+        if(!visited[neighbor]) 
+        return false;
+    }
+    return true;
+}
+
+void dfs(int node){
+    visited[node] = true;
+    
+    if(wth_cats[node] > m) 
+    return;
+    
+    if(is_leaf(node))
+    valid++;
+    
+    for(int neighbor:adj[node]){
+        if(!visited[neighbor]){
+            if(wth_cats[neighbor])
+            wth_cats[neighbor] += wth_cats[node];
+            
+            dfs(neighbor);
+        }
+    }
+}
+
+int main(){
+    cin>>n>>m;
+    
+     memset(visited, false, sizeof visited);
+     
+     for(int i =0;i<n;i++) cin>>wth_cats[i];
+     
+     for(int i = 0;i<(n - 1);i++){
+         int u,v;
+         cin>>u>>v;
+         u--;
+         v--;
+         adj[u].push_back(v);
+         adj[v].push_back(u);
+     }
+     
+     valid = 0;
+     dfs(0);
+     
+     cout<<valid;
+}
