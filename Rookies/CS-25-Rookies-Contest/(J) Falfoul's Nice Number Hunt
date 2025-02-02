@@ -1,0 +1,22 @@
+#include <iostream>
+#include <cmath>
+using namespace std;
+int numnum(int num){
+    int Znumnum[] = {6,9,66,69,96,99};
+    for(int n:Znumnum){
+            if(n>=num){
+                return n;
+            }
+        }
+        return 99;
+}
+int main(){
+    
+    int t;
+    cin>>t;
+    while(t--){
+        int num;
+        cin>>num;
+        cout<<numnum(num)<<endl;
+}
+}
