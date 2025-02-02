@@ -1,0 +1,39 @@
+#include<iostream>
+using namespace std;
+
+int main() {
+	ios_base::sync_with_stdio(false);
+	cin.tie(NULL);
+	int n,m;
+	cin>>n;
+	int arr[n];
+	int pre_Sum[n];
+
+	for(int i = 0; i<n; i++) {
+		cin>>arr[i];
+	}
+
+	pre_Sum[0] = arr[0];
+	for(int i = 1; i<n; i++) {
+		pre_Sum[i] = pre_Sum[i - 1] + arr[i];
+	}
+
+	cin>>m;
+	int q[m];
+	for(int i = 0; i<m; i++) {
+		cin>>q[i];
+	}
+	for(int j = 0; j<m; j++) {
+		int l = 0,r = n - 1;
+		while(l < r){
+		    int mid = l + (r - l) / 2;
+		    if(pre_Sum[mid] < q[j]){
+		        l = mid + 1;
+		    }
+		    else{
+		        r = mid;
+		    }
+		}
+		cout<< l + 1<<"\n";
+	}
+}
